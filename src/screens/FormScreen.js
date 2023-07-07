@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  Image,
-  Pressable,
-  Button,
-} from "react-native";
+import { Text, TextInput, View, StyleSheet, Image, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { GalleryPicker } from "../components/GalleryPicker";
+import { CameraPicker } from "../components/CameraPicker";
 
 export const FormScreen = () => {
   const [titleValue, setTitleValue] = useState("");
   const [contentValue, setContentValue] = useState("");
   const [pickedImageUri, setPickedImageUri] = useState("");
   const [pickedLocation, setPicketLocation] = useState(null);
+  const navigation = useNavigation();
 
   const handleTitle = (value) => {
     setTitleValue(value);
@@ -54,15 +50,21 @@ export const FormScreen = () => {
             }}
           />
         ) : (
-          <Text>No Image Yet.</Text>
+          <View>
+            <Text>No Image Yet.</Text>
+          </View>
         )}
+        <View style={[styles.flexCol, { gap: 8 }]}>
+          <GalleryPicker onPickImage={setPickedImageUri} />
+          <CameraPicker onPickImage={setPickedImageUri} />
+        </View>
       </View>
       <View style={styles.form}>
         <Text style={styles.label}>Location</Text>
         {pickedLocation ? (
           <View>{/* To DO: use map view */}</View>
         ) : (
-          <Text>No Image Yet.</Text>
+          <Text>No Location Yet.</Text>
         )}
       </View>
       <View style={styles.submit}>
@@ -75,10 +77,12 @@ export const FormScreen = () => {
 const styles = StyleSheet.create({
   form: {
     padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
   },
   label: {
     fontWeight: "bold",
-    marginBottom: 8,
   },
   input: {
     borderBottomColor: "black",
@@ -87,5 +91,13 @@ const styles = StyleSheet.create({
   },
   submit: {
     margin: 16,
+  },
+  flexCol: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  image: {
+    width: "100%",
+    height: 200,
   },
 });
