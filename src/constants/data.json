@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "title": "My First Diary",
+    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tellus justo, laoreet ac semper quis, hendrerit quis lectus. Nulla quis nisl non elit viverra dapibus.",
+    "location": {
+      "lng": -77.34308,
+      "lat": 39.60356,
+      "address": "9226 Old Mill Road, Rocky Ridge, MD 21778 Rocky Ridge Maryland United States"
+    },
+    "image": "https://media.istockphoto.com/id/490673902/id/foto/bundaran-hi-jakarta-landmark-at-night.jpg?s=1024x1024&w=is&k=20&c=UHdvI2PXQtogqa3fsJQcl1Jj3RYH6cIF7X3XCmj1-RI="
+  }
+]
