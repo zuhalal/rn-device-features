@@ -1,6 +1,6 @@
 import { useIsFocused, useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToDoCard } from "../components/ToDoCard";
 import INITIAL_DATA from "../constants/data.json";
@@ -22,6 +22,7 @@ export const HomeScreen = () => {
     <SafeAreaView style={styles.container}>
       <FlatList
         data={data}
+        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
         renderItem={({ item }) => (
           <ToDoCard
             address={item.location.address}
