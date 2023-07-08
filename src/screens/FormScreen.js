@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, TextInput, View, StyleSheet, Image, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  Image,
+  Button,
+  ScrollView,
+} from "react-native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { GalleryPicker } from "../components/GalleryPicker";
 import { CameraPicker } from "../components/CameraPicker";
+import { LocationPicker } from "../components/LocationPicker";
 
 export const FormScreen = () => {
   const [titleValue, setTitleValue] = useState("");
   const [contentValue, setContentValue] = useState("");
   const [pickedImageUri, setPickedImageUri] = useState("");
-  const [pickedLocation, setPicketLocation] = useState(null);
+  const [pickedLocation, setPickedLocation] = useState(null);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const route = useRoute();
 
   const handleTitle = (value) => {
     setTitleValue(value);
@@ -20,56 +35,69 @@ export const FormScreen = () => {
     setContentValue(value);
   };
 
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPicked = {
+        lat: route.params.lat,
+        lng: route.params.lng,
+      };
+      setPickedLocation(mapPicked);
+    }
+  }, [route, isFocused]);
+
   return (
     <SafeAreaView>
-      <View style={styles.form}>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          value={titleValue}
-          onChange={handleTitle}
-        />
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Content</Text>
-        <TextInput
-          style={styles.input}
-          multiline={true}
-          value={contentValue}
-          onChange={handleContent}
-        />
-      </View>
-
-      <View style={styles.form}>
-        <Text style={styles.label}>Picture</Text>
-        {pickedImageUri ? (
-          <Image
-            style={styles.image}
-            source={{
-              uri: pickedImageUri,
-            }}
+      <ScrollView>
+        <View style={styles.form}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            value={titleValue}
+            onChange={handleTitle}
           />
-        ) : (
-          <View>
-            <Text>No Image Yet.</Text>
-          </View>
-        )}
-        <View style={[styles.flexCol, { gap: 8 }]}>
-          <GalleryPicker onPickImage={setPickedImageUri} />
-          <CameraPicker onPickImage={setPickedImageUri} />
         </View>
-      </View>
-      <View style={styles.form}>
-        <Text style={styles.label}>Location</Text>
-        {pickedLocation ? (
-          <View>{/* To DO: use map view */}</View>
-        ) : (
-          <Text>No Location Yet.</Text>
-        )}
-      </View>
-      <View style={styles.submit}>
-        <Button title="submit" />
-      </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Content</Text>
+          <TextInput
+            style={styles.input}
+            multiline={true}
+            value={contentValue}
+            onChange={handleContent}
+          />
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.label}>Picture</Text>
+          {pickedImageUri ? (
+            <Image
+              style={styles.image}
+              source={{
+                uri: pickedImageUri,
+              }}
+            />
+          ) : (
+            <View>
+              <Text>No Image Yet.</Text>
+            </View>
+          )}
+          <View style={[styles.flexCol, { gap: 8 }]}>
+            <GalleryPicker onPickImage={setPickedImageUri} />
+            <CameraPicker onPickImage={setPickedImageUri} />
+          </View>
+        </View>
+        <View style={styles.form}>
+          <Text style={styles.label}>Location</Text>
+          <View>
+            <LocationPicker
+              pickedLocation={pickedLocation}
+              onPickLocation={setPickedLocation}
+            />
+          </View>
+        </View>
+        <View style={styles.submit}>
+          <Button title="submit" />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

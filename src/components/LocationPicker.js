@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Button, View, StyleSheet, Image } from "react-native";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
@@ -8,8 +8,7 @@ import {
 import { getMapPreview } from "../utils/location";
 import { useNavigation } from "@react-navigation/native";
 
-export const LocationPicker = () => {
-  const [location, setLocation] = useState(null);
+export const LocationPicker = ({ pickedLocation, onPickLocation }) => {
   const [locationPerm, requrestLocationPerm] = useForegroundPermissions();
   const navigation = useNavigation();
 
@@ -37,7 +36,7 @@ export const LocationPicker = () => {
 
     const location = await getCurrentPositionAsync();
 
-    setLocation({
+    onPickLocation({
       lat: location.coords.latitude,
       lng: location.coords.longitude,
     });
@@ -46,7 +45,6 @@ export const LocationPicker = () => {
   const pickLocation = () => {
     navigation.navigate("Maps");
   };
-
   return (
     <View
       style={{
@@ -56,11 +54,11 @@ export const LocationPicker = () => {
         gap: 8,
       }}
     >
-      {location && (
+      {pickedLocation && (
         <Image
           style={styles.image}
           source={{
-            uri: getMapPreview(location?.lat, location?.lng),
+            uri: getMapPreview(pickedLocation?.lat, pickedLocation?.lng),
           }}
         />
       )}
