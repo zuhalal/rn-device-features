@@ -1,6 +1,5 @@
 [
   {
-    "id": 1,
     "title": "My First Diary",
     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tellus justo, laoreet ac semper quis, hendrerit quis lectus. Nulla quis nisl non elit viverra dapibus.",
     "location": {

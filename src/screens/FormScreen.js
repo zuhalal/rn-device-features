@@ -8,6 +8,7 @@ import {
   Image,
   Button,
   ScrollView,
+  Alert,
 } from "react-native";
 import {
   useIsFocused,
@@ -17,6 +18,7 @@ import {
 import { GalleryPicker } from "../components/GalleryPicker";
 import { CameraPicker } from "../components/CameraPicker";
 import { LocationPicker } from "../components/LocationPicker";
+import { getAddressFromMap } from "../utils/location";
 
 export const FormScreen = () => {
   const [titleValue, setTitleValue] = useState("");
@@ -36,14 +38,41 @@ export const FormScreen = () => {
   };
 
   useEffect(() => {
-    if (isFocused && route.params) {
-      const mapPicked = {
-        lat: route.params.lat,
-        lng: route.params.lng,
-      };
-      setPickedLocation(mapPicked);
-    }
+    const getAddr = async () => {
+      if (isFocused && route.params) {
+        const address = await getAddressFromMap(
+          route.params.lat,
+          route.params.lng
+        );
+
+        const mapPicked = {
+          lat: route.params.lat,
+          lng: route.params.lng,
+          address,
+        };
+        setPickedLocation(mapPicked);
+      }
+    };
+
+    getAddr();
   }, [route, isFocused]);
+
+  const submit = () => {
+    if (!titleValue || !contentValue || !pickedLocation || !pickedImageUri) {
+      Alert.alert("Fill all the required forms", "All forms must be filled");
+      return;
+    }
+    const objData = {
+      title: titleValue,
+      content: contentValue,
+      location: pickedLocation,
+      image: pickedImageUri,
+    };
+
+    navigation.navigate("Home", {
+      place: objData,
+    });
+  };
 
   return (
     <SafeAreaView>
@@ -53,7 +82,7 @@ export const FormScreen = () => {
           <TextInput
             style={styles.input}
             value={titleValue}
-            onChange={handleTitle}
+            onChangeText={handleTitle}
           />
         </View>
         <View style={styles.form}>
@@ -62,7 +91,7 @@ export const FormScreen = () => {
             style={styles.input}
             multiline={true}
             value={contentValue}
-            onChange={handleContent}
+            onChangeText={handleContent}
           />
         </View>
 
@@ -92,10 +121,11 @@ export const FormScreen = () => {
               pickedLocation={pickedLocation}
               onPickLocation={setPickedLocation}
             />
+            {pickedLocation && <Text>{pickedLocation?.address}</Text>}
           </View>
         </View>
         <View style={styles.submit}>
-          <Button title="submit" />
+          <Button title="submit" onPress={submit} />
         </View>
       </ScrollView>
     </SafeAreaView>

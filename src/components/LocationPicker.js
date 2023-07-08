@@ -5,7 +5,7 @@ import {
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
-import { getMapPreview } from "../utils/location";
+import { getAddressFromMap, getMapPreview } from "../utils/location";
 import { useNavigation } from "@react-navigation/native";
 
 export const LocationPicker = ({ pickedLocation, onPickLocation }) => {
@@ -36,9 +36,15 @@ export const LocationPicker = ({ pickedLocation, onPickLocation }) => {
 
     const location = await getCurrentPositionAsync();
 
+    const address = await getAddressFromMap(
+      location.coords.latitude,
+      location.coords.longitude
+    );
+
     onPickLocation({
       lat: location.coords.latitude,
       lng: location.coords.longitude,
+      address,
     });
   };
 
