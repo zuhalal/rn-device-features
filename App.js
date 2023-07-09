@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { IconButton } from "./src/components/button";
 import { FormScreen } from "./src/screens/FormScreen";
 import { HomeScreen } from "./src/screens/HomeScreen";
+import { MapsScreen } from "./src/screens/MapsScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
             title: "Add New Diary",
           }}
         />
+        <Stack.Screen name="Maps" component={MapsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
