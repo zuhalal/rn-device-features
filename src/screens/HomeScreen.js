@@ -1,6 +1,6 @@
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToDoCard } from "../components/ToDoCard";
 import diaryDao from "../utils/data/local/diaryDao";
@@ -9,6 +9,7 @@ export const HomeScreen = () => {
 
   // const route = useRoute();
   const isFocused = useIsFocused();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     // spread operator
@@ -20,11 +21,16 @@ export const HomeScreen = () => {
         }
       } catch (error) {
         console.error(error);
+        Alert.alert(error);
       }
     };
 
     getData();
-  }, [isFocused]);
+
+    return () => {
+      setReload(false);
+    };
+  }, [isFocused, reload]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,6 +44,8 @@ export const HomeScreen = () => {
             image={item.image}
             title={item.title}
             key={item.id}
+            id={item.id}
+            setReload={setReload}
           />
         )}
       />

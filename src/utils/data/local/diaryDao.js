@@ -82,4 +82,24 @@ export default {
       });
     });
   },
+  deleteDiary: (id) => {
+    return new Promise((resolve, reject) => {
+      database.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM diary WHERE id=?`,
+          [id],
+          (_, resultSet) => {
+            if (resultSet.rowsAffected > 0) {
+              resolve(resultSet.rowsAffected);
+            } else {
+              reject("Diary Not Found");
+            }
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+      });
+    });
+  },
 };
