@@ -1,22 +1,30 @@
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToDoCard } from "../components/ToDoCard";
-import INITIAL_DATA from "../constants/data.json";
-
+import diaryDao from "../utils/data/local/diaryDao";
 export const HomeScreen = () => {
-  const [data, setData] = useState(INITIAL_DATA);
+  const [data, setData] = useState([]);
 
-  const route = useRoute();
+  // const route = useRoute();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     // spread operator
-    if (isFocused && route.params) {
-      setData([...data, route.params.place]);
-    }
-  }, [isFocused, route]);
+    const getData = async () => {
+      try {
+        const promises = await diaryDao.getAllDiary();
+        if (isFocused) {
+          setData(promises);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getData();
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +37,7 @@ export const HomeScreen = () => {
             content={item.content}
             image={item.image}
             title={item.title}
-            key={`${item.title}${item.location.address}${item.image}`}
+            key={item.id}
           />
         )}
       />

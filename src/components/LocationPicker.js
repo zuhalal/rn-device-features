@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, View, StyleSheet, Image } from "react-native";
+import { Button, View, StyleSheet, Image, Alert } from "react-native";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,

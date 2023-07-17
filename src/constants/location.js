@@ -1,1 +1,1 @@
-export const GMAPS_API_KEY = "AIzaSyDR4glsatEwoZMlXxuBl5Tig_2_idbvUl0";
+export const GMAPS_API_KEY = "AIzaSyA4s6YEXyNBWE8qw1GSnXLOX4nIA0OB4fQ";

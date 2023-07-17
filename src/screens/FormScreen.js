@@ -19,6 +19,7 @@ import { GalleryPicker } from "../components/GalleryPicker";
 import { CameraPicker } from "../components/CameraPicker";
 import { LocationPicker } from "../components/LocationPicker";
 import { getAddressFromMap } from "../utils/location";
+import diaryDao from "../utils/data/local/diaryDao";
 
 export const FormScreen = () => {
   const [titleValue, setTitleValue] = useState("");
@@ -69,9 +70,15 @@ export const FormScreen = () => {
       image: pickedImageUri,
     };
 
-    navigation.navigate("Home", {
-      place: objData,
-    });
+    diaryDao
+      .insertDiary(objData)
+      .then(() => {
+        // navigation.navigate("Home", {
+        //   place: objData,
+        // });
+        navigation.navigate("Home");
+      })
+      .catch((err) => Alert.alert(err));
   };
 
   return (

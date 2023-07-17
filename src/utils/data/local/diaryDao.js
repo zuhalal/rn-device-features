@@ -1,17 +1,18 @@
 import { database } from "./database";
 
 export default {
-  insertPlaces: (place) => {
-    database.transaction((tx) => {
-      return new Promise((resolve, reject) => {
+  insertDiary: (diary) => {
+    return new Promise((resolve, reject) => {
+      database.transaction((tx) => {
         tx.executeSql(
-          `INSERT INTO places VALUES (?, ?, ?, ?, ?)`,
+          `INSERT INTO diary(title, content, address, imageUri, lat, lng) VALUES (?, ?, ?, ?, ?, ?)`,
           [
-            place.title,
-            place.content,
-            place.image,
-            place.location.lang,
-            place.location.lng,
+            diary.title,
+            diary.content,
+            diary.location.address,
+            diary.image,
+            diary.location.lat,
+            diary.location.lng,
           ],
           (_, resultSet) => {
             resolve(resultSet);
@@ -23,25 +24,27 @@ export default {
       });
     });
   },
-  getAllPlaces: () => {
+  getAllDiary: () => {
     return new Promise((resolve, reject) => {
       database.transaction((tx) => {
         tx.executeSql(
-          `SELECT * FROM places`,
+          `SELECT * FROM diary`,
           [],
           (_, resultSet) => {
-            const places = resultSet.rows._array.map((place) => {
+            const diary = resultSet.rows._array.map((diary) => {
               return {
-                id: place.id,
-                title: place.title,
-                content: place.content,
+                id: diary.id,
+                title: diary.title,
+                content: diary.content,
+                image: diary.imageUri,
                 location: {
-                  lat: place.lat,
-                  lng: place.lng,
+                  lat: diary.lat,
+                  lng: diary.lng,
+                  address: diary.address,
                 },
               };
             });
-            resolve(places);
+            resolve(diary);
           },
           (_, error) => {
             reject(error);
@@ -50,24 +53,26 @@ export default {
       });
     });
   },
-  getPlace: (id) => {
+  getDiary: (id) => {
     return new Promise((resolve, reject) => {
       database.transaction((tx) => {
         tx.executeSql(
-          `SELECT * FROM places WHERE id=?`,
+          `SELECT * FROM diary WHERE id=?`,
           [id],
           (_, resultSet) => {
             if (resultSet.rows.length > 0) {
-              const { title, content, lat, lng, id } = resultSet.rows._array[0];
-              const place = {
+              const { title, content, address, lat, lng, id } =
+                resultSet.rows._array[0];
+              const diary = {
                 title,
                 content,
+                address,
                 location: { lat, lng },
                 id,
               };
-              resolve(place);
+              resolve(diary);
             } else {
-              reject("Places Not Found");
+              reject("Diary Not Found");
             }
           },
           (_, error) => {
