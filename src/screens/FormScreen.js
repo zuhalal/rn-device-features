@@ -20,6 +20,8 @@ import { CameraPicker } from "../components/CameraPicker";
 import { LocationPicker } from "../components/LocationPicker";
 import { getAddressFromMap } from "../utils/location";
 import diaryDao from "../utils/data/local/diaryDao";
+import { useThemeContext } from "../context/useThemeContext";
+import Colors from "../constants/colors";
 
 export const FormScreen = () => {
   const [titleValue, setTitleValue] = useState("");
@@ -81,6 +83,10 @@ export const FormScreen = () => {
       .catch((err) => Alert.alert(err));
   };
 
+  const { themeValue } = useThemeContext();
+
+  const styles = getStyle(themeValue);
+
   return (
     <SafeAreaView>
       <ScrollView>
@@ -139,30 +145,32 @@ export const FormScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  form: {
-    padding: 16,
-    display: "flex",
-    flexDirection: "column",
-    gap: 8,
-  },
-  label: {
-    fontWeight: "bold",
-  },
-  input: {
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    color: "black",
-  },
-  submit: {
-    margin: 16,
-  },
-  flexCol: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  image: {
-    width: "100%",
-    height: 200,
-  },
-});
+const getStyle = (theme) =>
+  StyleSheet.create({
+    form: {
+      padding: 16,
+      display: "flex",
+      flexDirection: "column",
+      gap: 8,
+    },
+    label: {
+      fontWeight: "bold",
+      color: Colors[theme].white,
+    },
+    input: {
+      borderBottomColor: Colors[theme].white,
+      borderBottomWidth: 1,
+      color: Colors[theme].white,
+    },
+    submit: {
+      margin: 16,
+    },
+    flexCol: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    image: {
+      width: "100%",
+      height: 200,
+    },
+  });

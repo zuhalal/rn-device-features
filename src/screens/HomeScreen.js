@@ -1,11 +1,31 @@
 import { useIsFocused } from "@react-navigation/native";
+import RadioButtonRN from "radio-buttons-react-native";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ToDoCard } from "../components/ToDoCard";
+import Colors from "../constants/colors";
+import { useThemeContext } from "../context/useThemeContext";
 import diaryDao from "../utils/data/local/diaryDao";
+
 export const HomeScreen = () => {
   const [data, setData] = useState([]);
+  const { themeValue, initialValue, themeOperations } = useThemeContext();
+
+  const options = [
+    {
+      label: "Light Mode",
+      value: "light",
+    },
+    {
+      label: "Dark Mode",
+      value: "dark",
+    },
+    {
+      label: "System Default",
+      value: "default",
+    },
+  ];
 
   // const route = useRoute();
   const isFocused = useIsFocused();
@@ -32,8 +52,20 @@ export const HomeScreen = () => {
     };
   }, [isFocused, reload]);
 
+  const styles = getStyle(themeValue);
+
   return (
     <SafeAreaView style={styles.container}>
+      <RadioButtonRN
+        data={options}
+        selectedBtn={(e) => themeOperations(e?.value)}
+        initial={initialValue}
+        activeColor={Colors[themeValue]?.activeColor}
+        deactiveColor={Colors[themeValue]?.deactiveColor}
+        boxActiveBgColor={Colors[themeValue]?.boxActiveColor}
+        boxDeactiveBgColor={Colors[themeValue]?.themeColor}
+        textColor={Colors[themeValue]?.white}
+      />
       <FlatList
         data={data}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
@@ -53,8 +85,10 @@ export const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 12,
-  },
-});
+const getStyle = (theme) =>
+  StyleSheet.create({
+    container: {
+      padding: 12,
+      backgroundColor: Colors[theme].themeColor,
+    },
+  });
