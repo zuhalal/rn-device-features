@@ -10,22 +10,7 @@ import diaryDao from "../utils/data/local/diaryDao";
 
 export const HomeScreen = () => {
   const [data, setData] = useState([]);
-  const { themeValue, initialValue, themeOperations } = useThemeContext();
-
-  const options = [
-    {
-      label: "Light Mode",
-      value: "light",
-    },
-    {
-      label: "Dark Mode",
-      value: "dark",
-    },
-    {
-      label: "System Default",
-      value: "default",
-    },
-  ];
+  const { themeValue } = useThemeContext();
 
   // const route = useRoute();
   const isFocused = useIsFocused();
@@ -56,16 +41,6 @@ export const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <RadioButtonRN
-        data={options}
-        selectedBtn={(e) => themeOperations(e?.value)}
-        initial={initialValue}
-        activeColor={Colors[themeValue]?.activeColor}
-        deactiveColor={Colors[themeValue]?.deactiveColor}
-        boxActiveBgColor={Colors[themeValue]?.boxActiveColor}
-        boxDeactiveBgColor={Colors[themeValue]?.themeColor}
-        textColor={Colors[themeValue]?.white}
-      />
       <FlatList
         data={data}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
