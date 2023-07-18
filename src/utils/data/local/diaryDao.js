@@ -31,7 +31,7 @@ export default {
           `SELECT * FROM diary`,
           [],
           (_, resultSet) => {
-            const diary = resultSet.rows._array.map((diary) => {
+            const diaries = resultSet.rows._array.map((diary) => {
               return {
                 id: diary.id,
                 title: diary.title,
@@ -44,7 +44,7 @@ export default {
                 },
               };
             });
-            resolve(diary);
+            resolve(diaries);
           },
           (_, error) => {
             reject(error);

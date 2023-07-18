@@ -17,8 +17,6 @@ export const ToDoCard = ({ id, title, content, image, address, setReload }) => {
       if (deletedRows > 0) {
         Alert.alert("Delete Succesful");
         setReload(true);
-      } else {
-        Alert.alert("Delete Failed");
       }
     } catch (error) {
       Alert.alert("Delete Failed");

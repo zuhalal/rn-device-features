@@ -1,5 +1,4 @@
 import { useIsFocused } from "@react-navigation/native";
-import RadioButtonRN from "radio-buttons-react-native";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,8 +19,8 @@ export const HomeScreen = () => {
     // spread operator
     const getData = async () => {
       try {
-        const promises = await diaryDao.getAllDiary();
         if (isFocused) {
+          const promises = await diaryDao.getAllDiary();
           setData(promises);
         }
       } catch (error) {
