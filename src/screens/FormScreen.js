@@ -30,6 +30,9 @@ export const FormScreen = () => {
     formState: { errors },
     control,
     handleSubmit,
+    watch,
+    resetField,
+    getValues,
   } = useForm({
     defaultValues: {
       title: "",
@@ -78,8 +81,8 @@ export const FormScreen = () => {
       return;
     }
     const objData = {
-      title: titleValue,
-      content: contentValue,
+      title: value.title,
+      content: value.content,
       location: pickedLocation,
       image: pickedImageUri,
     };
@@ -99,15 +102,17 @@ export const FormScreen = () => {
 
   const styles = getStyle(themeValue);
 
+  console.log(getValues());
+
   return (
     <SafeAreaView>
       <ScrollView>
-        {/* <Button
-          title="Reset"
+        <Button
+          title="Reset Field Title"
           onPress={() => {
             resetField("title");
           }}
-        /> */}
+        />
         {/* <ButtonPaper
           icon="camera"
           mode="text"
@@ -130,10 +135,9 @@ export const FormScreen = () => {
             name="title"
             rules={{ required: { message: "Title is required", value: true } }}
           />
-          {/* <HelperText type="error" visible={errors?.title}>
+          <HelperText type="error" visible={errors?.title}>
             {errors?.title?.message}
-          </HelperText> */}
-          {errors && <Text style={styles.error}>{errors?.title?.message}</Text>}
+          </HelperText>
         </View>
         <View style={styles.form}>
           <Text style={styles.label}>Content</Text>
@@ -153,9 +157,9 @@ export const FormScreen = () => {
               required: { message: "Content is required", value: true },
             }}
           />
-          {errors && (
-            <Text style={styles.error}>{errors?.content?.message}</Text>
-          )}
+          <HelperText type="error" visible={errors?.content}>
+            {errors?.content?.message}
+          </HelperText>
         </View>
         <View style={[styles.form, styles.flexCol, { gap: 12 }]}>
           <Text style={styles.label}>Activity</Text>
@@ -174,21 +178,24 @@ export const FormScreen = () => {
                 )}
                 name={`activities.${index}.name`}
               />
-              <Button
-                color="#841584"
-                title="Remove"
+              <ButtonPaper
+                mode="outlined"
                 onPress={() => {
                   remove(index);
                 }}
-              />
+              >
+                Remove
+              </ButtonPaper>
             </View>
           ))}
-          <Button
-            title="Add Activity"
+          <ButtonPaper
+            mode="contained"
             onPress={() => {
               append({ name: "" });
             }}
-          />
+          >
+            Add Activity
+          </ButtonPaper>
         </View>
         <View style={styles.form}>
           <Text style={styles.label}>Picture</Text>

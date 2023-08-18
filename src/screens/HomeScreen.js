@@ -24,8 +24,8 @@ export const HomeScreen = () => {
           setData(promises);
         }
       } catch (error) {
-        console.error(error);
-        Alert.alert(error);
+        // console.error(error);
+        // Alert.alert(error);
       }
     };
 

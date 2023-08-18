@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, Pressable, Alert } from "react-native";
+import { Button, Card } from "react-native-paper";
 import Colors from "../constants/colors";
 import { useThemeContext } from "../context/useThemeContext";
 import diaryDao from "../utils/data/local/diaryDao";
@@ -23,37 +24,48 @@ export const ToDoCard = ({ id, title, content, image, address, setReload }) => {
     }
   };
   return (
-    <View style={[styles.flexCol, styles.container]}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: image,
-        }}
-      />
-      <View style={[styles.flexCol, styles.contentContainer]}>
-        <View style={[styles.flexCol, styles.headerContainer]}>
-          <Text style={styles.header}>{title}</Text>
-          <Text style={styles.text}>{content}</Text>
-        </View>
-        <View style={[styles.flexRow, { gap: 8 }]}>
-          <IconButton
-            icon="location-pin"
-            size={16}
-            color={Colors[themeValue].white}
-          />
-          <Text style={styles.text}>{address}</Text>
-        </View>
-        <Pressable
-          style={[styles.flexRow, { gap: 8 }]}
-          onPress={() => {
-            handleDelete(id);
-          }}
-        >
-          <IconButton icon="delete" size={16} color="red" />
-          <Text style={styles.text}>Delete</Text>
-        </Pressable>
-      </View>
-    </View>
+    // <View style={[styles.flexCol, styles.container]}>
+    //   <Image
+    //     style={styles.image}
+    //     source={{
+    //       uri: image,
+    //     }}
+    //   />
+    //   <View style={[styles.flexCol, styles.contentContainer]}>
+    //     <View style={[styles.flexCol, styles.headerContainer]}>
+    //       <Text style={styles.header}>{title}</Text>
+    //       <Text style={styles.text}>{content}</Text>
+    //     </View>
+    //     <View style={[styles.flexRow, { gap: 8 }]}>
+    //       <IconButton
+    //         icon="location-pin"
+    //         size={16}
+    //         color={Colors[themeValue].white}
+    //       />
+    //       <Text style={styles.text}>{address}</Text>
+    //     </View>
+    //     <Pressable
+    //       style={[styles.flexRow, { gap: 8 }]}
+    //       onPress={() => {
+    //         handleDelete(id);
+    //       }}
+    //     >
+    //       <IconButton icon="delete" size={16} color="red" />
+    //       <Text style={styles.text}>Delete</Text>
+    //     </Pressable>
+    //   </View>
+    // </View>
+    <Card>
+      <Card.Cover source={{ uri: image }} />
+
+      <Card.Title title={title} />
+      <Card.Content>
+        <Text variant="bodyMedium">{content}</Text>
+      </Card.Content>
+      <Card.Actions>
+        <IconButton icon="delete" size={24} color="red" />
+      </Card.Actions>
+    </Card>
   );
 };
 
