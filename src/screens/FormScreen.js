@@ -22,21 +22,27 @@ import { getAddressFromMap } from "../utils/location";
 import diaryDao from "../utils/data/local/diaryDao";
 import { useThemeContext } from "../context/useThemeContext";
 import Colors from "../constants/colors";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 export const FormScreen = () => {
   const {
     formState: { errors },
     control,
     handleSubmit,
-    resetField,
-    getFieldState,
   } = useForm({
     defaultValues: {
       title: "",
       content: "",
+      activities: [{ name: "" }],
     },
   });
+
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: "activities",
+    }
+  );
 
   const [pickedImageUri, setPickedImageUri] = useState("");
   const [pickedLocation, setPickedLocation] = useState(null);
@@ -95,12 +101,12 @@ export const FormScreen = () => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Button
+        {/* <Button
           title="Reset"
           onPress={() => {
             resetField("title");
           }}
-        />
+        /> */}
         <View style={styles.form}>
           <Text style={styles.label}>Title</Text>
           <Controller
@@ -116,7 +122,7 @@ export const FormScreen = () => {
             name="title"
             rules={{ required: { message: "Title is required", value: true } }}
           />
-          <Text style={styles.error}>{errors?.title?.message}</Text>
+          {errors && <Text style={styles.error}>{errors?.title?.message}</Text>}
         </View>
         <View style={styles.form}>
           <Text style={styles.label}>Content</Text>
@@ -134,6 +140,42 @@ export const FormScreen = () => {
             name="content"
             rules={{
               required: { message: "Content is required", value: true },
+            }}
+          />
+          {errors && (
+            <Text style={styles.error}>{errors?.content?.message}</Text>
+          )}
+        </View>
+        <View style={[styles.form, styles.flexCol, { gap: 12 }]}>
+          <Text style={styles.label}>Activity</Text>
+          {fields.map((item, index) => (
+            <View key={item.id} style={[styles.flexCol, { gap: 12 }]}>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    multiline={true}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                    value={value}
+                  />
+                )}
+                name={`activities.${index}.name`}
+              />
+              <Button
+                color="#841584"
+                title="Remove"
+                onPress={() => {
+                  remove(index);
+                }}
+              />
+            </View>
+          ))}
+          <Button
+            title="Add Activity"
+            onPress={() => {
+              append({ name: "" });
             }}
           />
         </View>
@@ -167,17 +209,7 @@ export const FormScreen = () => {
           </View>
         </View>
         <View style={styles.submit}>
-          <Button
-            title="submit"
-            onPress={() => {
-              handleSubmit(submit);
-              errors &&
-                Alert.alert(
-                  "Fill all the required forms",
-                  "All forms must be filled"
-                );
-            }}
-          />
+          <Button title="submit" onPress={handleSubmit(submit)} />
         </View>
       </ScrollView>
     </SafeAreaView>
