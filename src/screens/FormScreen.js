@@ -22,23 +22,27 @@ import { getAddressFromMap } from "../utils/location";
 import diaryDao from "../utils/data/local/diaryDao";
 import { useThemeContext } from "../context/useThemeContext";
 import Colors from "../constants/colors";
+import { Controller, useForm } from "react-hook-form";
 
 export const FormScreen = () => {
-  const [titleValue, setTitleValue] = useState("");
-  const [contentValue, setContentValue] = useState("");
+  const {
+    formState: { errors },
+    control,
+    handleSubmit,
+    resetField,
+    getFieldState,
+  } = useForm({
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
+
   const [pickedImageUri, setPickedImageUri] = useState("");
   const [pickedLocation, setPickedLocation] = useState(null);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const route = useRoute();
-
-  const handleTitle = (value) => {
-    setTitleValue(value);
-  };
-
-  const handleContent = (value) => {
-    setContentValue(value);
-  };
 
   useEffect(() => {
     const getAddr = async () => {
@@ -60,8 +64,9 @@ export const FormScreen = () => {
     getAddr();
   }, [route, isFocused]);
 
-  const submit = () => {
-    if (!titleValue || !contentValue || !pickedLocation || !pickedImageUri) {
+  const submit = (value) => {
+    console.log(value);
+    if (!value.title || !value.content || !pickedLocation || !pickedImageUri) {
       Alert.alert("Fill all the required forms", "All forms must be filled");
       return;
     }
@@ -90,24 +95,48 @@ export const FormScreen = () => {
   return (
     <SafeAreaView>
       <ScrollView>
+        <Button
+          title="Reset"
+          onPress={() => {
+            resetField("title");
+          }}
+        />
         <View style={styles.form}>
           <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={titleValue}
-            onChangeText={handleTitle}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+              />
+            )}
+            name="title"
+            rules={{ required: { message: "Title is required", value: true } }}
           />
+          <Text style={styles.error}>{errors?.title?.message}</Text>
         </View>
         <View style={styles.form}>
           <Text style={styles.label}>Content</Text>
-          <TextInput
-            style={styles.input}
-            multiline={true}
-            value={contentValue}
-            onChangeText={handleContent}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                multiline={true}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+              />
+            )}
+            name="content"
+            rules={{
+              required: { message: "Content is required", value: true },
+            }}
           />
         </View>
-
         <View style={styles.form}>
           <Text style={styles.label}>Picture</Text>
           {pickedImageUri ? (
@@ -138,7 +167,17 @@ export const FormScreen = () => {
           </View>
         </View>
         <View style={styles.submit}>
-          <Button title="submit" onPress={submit} />
+          <Button
+            title="submit"
+            onPress={() => {
+              handleSubmit(submit);
+              errors &&
+                Alert.alert(
+                  "Fill all the required forms",
+                  "All forms must be filled"
+                );
+            }}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -152,6 +191,9 @@ const getStyle = (theme) =>
       display: "flex",
       flexDirection: "column",
       gap: 8,
+    },
+    error: {
+      color: "red",
     },
     label: {
       fontWeight: "bold",
