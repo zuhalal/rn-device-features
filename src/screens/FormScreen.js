@@ -23,6 +23,7 @@ import diaryDao from "../utils/data/local/diaryDao";
 import { useThemeContext } from "../context/useThemeContext";
 import Colors from "../constants/colors";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Button as ButtonPaper, HelperText } from "react-native-paper";
 
 export const FormScreen = () => {
   const {
@@ -107,6 +108,13 @@ export const FormScreen = () => {
             resetField("title");
           }}
         /> */}
+        {/* <ButtonPaper
+          icon="camera"
+          mode="text"
+          onPress={() => console.log("Pressed")}
+        >
+          Press me
+        </ButtonPaper> */}
         <View style={styles.form}>
           <Text style={styles.label}>Title</Text>
           <Controller
@@ -122,6 +130,9 @@ export const FormScreen = () => {
             name="title"
             rules={{ required: { message: "Title is required", value: true } }}
           />
+          {/* <HelperText type="error" visible={errors?.title}>
+            {errors?.title?.message}
+          </HelperText> */}
           {errors && <Text style={styles.error}>{errors?.title?.message}</Text>}
         </View>
         <View style={styles.form}>
